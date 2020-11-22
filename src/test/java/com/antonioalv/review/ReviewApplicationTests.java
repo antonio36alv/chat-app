@@ -26,8 +26,8 @@ class ReviewApplicationTests {
 
 	@BeforeAll
 	public static void beforeAll() {
-//		WebDriverManager.chromedriver().setup();
-//		driver = new ChromeDriver();
+		// WebDriverManager.chromedriver().setup();
+		// driver = new ChromeDriver();
 
 //		String chromeDriverPath = "C:\\Program Files (x86)\\chromedriver.exe";
 		String chromeDriverPath = "/usr/bin/chromedriver";
