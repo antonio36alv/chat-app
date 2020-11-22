@@ -25,6 +25,7 @@ jobs:
 #        image: selenium/standalone-firefox:latest
     - name: Install google chrome
       run: |
+        whatis flatpak
         chmod +x ./scripts/InstallChrome.sh
          ./scripts/InstallChrome.sh
     - name: Build with Maven
