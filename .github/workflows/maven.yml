@@ -25,8 +25,8 @@ jobs:
 #        image: selenium/standalone-firefox:latest
     - name: Install google chrome
       run: |
+        pwd
         chmod +x ../../scripts/InstallChrome.sh
-         pwd
          ../../scripts/InstallChrome.sh
     - name: Build with Maven
       run: mvn -B package --file pom.xml -X
