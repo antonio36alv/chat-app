@@ -26,6 +26,9 @@ jobs:
     - name: Install google chrome
       run: |
         pwd
+        ls
+        ls ../
+        ls ../../
         chmod +x ../../scripts/InstallChrome.sh
          ../../scripts/InstallChrome.sh
     - name: Build with Maven
