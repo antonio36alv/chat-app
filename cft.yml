@@ -1,0 +1,50 @@
+Resources:
+  # In thise case the first resource we will
+  # define is our EC2 instance
+  # In the tutorial he simply calls it AppNode
+  # I will name it EC2node
+  ec2Node:
+    Type: AWS::EC2::Instance
+    Properties:
+      InstanceType: t2.micro
+      # When you create an ec2 instance manually
+      # the first step is picking an machine image
+      # you find the image id after the hypen in
+      # ImageIds could vary by region, even if it is 
+      # the same image
+      ImageId: ami-0c94855ba95c71c99
+      # name of your ssh key
+      KeyName: n_virginia_us_east_1_aws 
+      SecurityGroups:
+      - !Ref ec2NodeSG
+      UserData: !Base64 |
+        #!/bin/bash
+        sudo yum update -y
+        sudo yum install docker -y
+        sudo service docker start
+        sudo docker run -p 80:8080 meepz/spring-boot-chat-app:latest
+  # Here we are defining the SG - security group
+  # for our ec2 instance
+  ec2NodeSG:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupDescription: sg for ssh, http, and dockers ports
+      # ingress as per the video:
+      # SecurityGroupIngress will define an array/list of
+      # ingresss/inbound connection properties
+      SecurityGroupIngress:
+        - IpProtocol: tcp
+          FromPort: '80'
+          ToPort: '80'
+          # 0.0.0.0/0 practically means allows from any ip address
+          CidrIp: 0.0.0.0/0
+        - IpProtocol: tcp 
+          FromPort: '22'
+          ToPort: '22'
+          # 0.0.0.0/0 practically means allows from any ip address
+          CidrIp: 0.0.0.0/0
+
+
+      
+# ami-01ce4793a2f45922e
+
