@@ -3,6 +3,7 @@ package com.antonioalv.review;
 import com.antonioalv.review.model.ChatMessage;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.remote.RemoteWebDriver;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.ui.Select;
@@ -29,7 +30,7 @@ public class ChatPage {
     @FindBy(className = "chatMessageText")
     private WebElement chatMessageText;
 
-    public ChatPage(WebDriver driver) {
+    public ChatPage(RemoteWebDriver driver) {
         PageFactory.initElements(driver, this);
         messageType = new Select(messageDrop);
 

@@ -1,55 +1,109 @@
 package com.antonioalv.review;
 
 import com.antonioalv.review.model.ChatMessage;
-import io.github.bonigarcia.wdm.WebDriverManager;
+import org.junit.Rule;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.chrome.ChromeDriver;
+import org.junit.runner.RunWith;
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeOptions;
+import org.openqa.selenium.firefox.FirefoxOptions;
+import org.openqa.selenium.remote.RemoteWebDriver;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.web.server.LocalServerPort;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit4.SpringRunner;
+import org.testcontainers.containers.BrowserWebDriverContainer;
+import org.testcontainers.containers.Network;
+import org.testcontainers.junit.jupiter.Container;
+import org.testcontainers.junit.jupiter.Testcontainers;
 
+import java.io.File;
+import java.net.*;
+import java.util.Enumeration;
+import java.util.Iterator;
+import java.util.List;
+
+import static org.junit.Assert.assertEquals;
+
+@RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@Testcontainers
 class ReviewApplicationTests {
 
 	@LocalServerPort
 	public int port;
 
-	public static WebDriver driver;
+    @Container
+	public BrowserWebDriverContainer chrome =
+			(BrowserWebDriverContainer) new BrowserWebDriverContainer()
+					.withRecordingMode(BrowserWebDriverContainer.VncRecordingMode.RECORD_ALL,
+							new File("./target/"))
+					.withCapabilities(new FirefoxOptions()
+							.addArguments("--headless",
+									"--disable-gpu",
+									"--window-size=1920,1200",
+									"--ignore-certificate-errors"));
+//				.withNetwork(Network.SHARED);
 
 	public String baseURL;
 
-	@BeforeAll
-	public static void beforeAll() {
+//	@BeforeAll
+//	public static void beforeAll() {
+//		driver = chrome.getWebDriver();
+		/*
+		previously used
 		// WebDriverManager.chromedriver().setup();
 		// driver = new ChromeDriver();
+		// for windows
+		// String firefoxDriverPath = "C:\\Program Files (x86)\\firefoxdriver.exe";
+		// for linux
+		// String chromeDriverPath = "/usr/bin/chromedriver";
+		// System.setProperty("webdriver.chrome.driver", chromeDriverPath);
+		// driver = new ChromeDriver(options);
+		*/
+//		ChromeOptions options = new ChromeOptions();
+//		options.addArguments("--headless", "--disable-gpu", "--window-size=1920,1200","--ignore-certificate-errors");
+//        chrome = new BrowserWebDriverContainer<>().withCapabilities(options);
+//		chrome = new BrowserWebDriverContainer<>().withCapabilities(new ChromeOptions().addArguments());
+//		driver = chrome.getWebDriver();
+//		String firefoxDriverPath = "/usr/local/bin/geckodriver";
+//		System.setProperty("webdriver.gecko.driver", firefoxDriverPath);
+//	}
 
-//		String chromeDriverPath = "C:\\Program Files (x86)\\chromedriver.exe";
-		String chromeDriverPath = "/usr/bin/chromedriver";
-		System.setProperty("webdriver.chrome.driver", chromeDriverPath);
-		ChromeOptions options = new ChromeOptions();
-		options.addArguments("--headless", "--disable-gpu", "--window-size=1920,1200","--ignore-certificate-errors");
-		driver = new ChromeDriver(options);
-	}
-
-	@AfterAll
-	public static void afterAll() {
-		driver.quit();
-		driver = null;
-	}
+//	@AfterAll
+//	public static void afterAll() {
+//		driver.quit();
+//		driver = null;
+//	}
 
 	@BeforeEach
 	public void beforeEach() {
-		baseURL = baseURL = "http://localhost:" + port;
+//		baseURL = baseURL = "http://localhost:" + port;
+		String hostIpAddress = chrome.getHost();
+		System.out.println("here");
+		System.out.println("here");
+		System.out.println("here");
+		System.out.println("here");
+		System.out.println("here");
+		System.out.println("here");
+		System.out.println(hostIpAddress);
+//		baseURL = "http://" + hostIpAddress + ":" + port;
+//		baseURL = "http://" + hostIpAddress + ":" + port;
+		org.testcontainers.Testcontainers.exposeHostPorts(port);
+		chrome.addExposedPort(port);
+		System.out.println(chrome.getExposedPorts());
 	}
 
 	@Test
 	public void userSignLoginChatTest() {
+		RemoteWebDriver driver = chrome.getWebDriver();
 
 		String firstName = "Buckley";
 		String lastName = "Payne";
@@ -59,6 +113,18 @@ class ReviewApplicationTests {
 
 		String messageText = "Smell the meat, not the heat";
 
+//		String hostIpAddress = "192.168.1.155";
+		// https://stackoverflow.com/questions/9481865/getting-the-ip-address-of-the-current-machine-using-java
+		String ip = "";
+		try(final DatagramSocket socket = new DatagramSocket()){
+			socket.connect(InetAddress.getByName("8.8.8.8"), 10002);
+			ip = socket.getLocalAddress().getHostAddress();
+			System.out.println(String.format("my ip: %s", ip));
+		} catch (UnknownHostException | SocketException e) {
+			e.printStackTrace();
+		}
+		baseURL = "http://" + ip + ":" + port;
+		System.out.println(baseURL);
 		driver.get(baseURL + "/signup");
 
 		SignupPage signup = new SignupPage(driver);

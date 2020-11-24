@@ -2,6 +2,7 @@ package com.antonioalv.review;
 
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.remote.RemoteWebDriver;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
 
@@ -23,7 +24,7 @@ public class SignupPage {
     @FindBy(id = "submit-button")
     private WebElement submitBtn;
 
-    public SignupPage(WebDriver webDriver) {
+    public SignupPage(RemoteWebDriver webDriver) {
         PageFactory.initElements(webDriver, this);
     }
 
