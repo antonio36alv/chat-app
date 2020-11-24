@@ -26,9 +26,6 @@ import org.testcontainers.junit.jupiter.Testcontainers;
 
 import java.io.File;
 import java.net.*;
-import java.util.Enumeration;
-import java.util.Iterator;
-import java.util.List;
 
 import static org.junit.Assert.assertEquals;
 
@@ -49,8 +46,8 @@ class ReviewApplicationTests {
 							.addArguments("--headless",
 									"--disable-gpu",
 									"--window-size=1920,1200",
-									"--ignore-certificate-errors"));
-//				.withNetwork(Network.SHARED);
+									"--ignore-certificate-errors"))
+				.withNetwork(Network.SHARED);
 
 	public String baseURL;
 
@@ -112,6 +109,9 @@ class ReviewApplicationTests {
 		String password = "Angel";
 
 		String messageText = "Smell the meat, not the heat";
+
+		System.out.println("i want pizza");
+		System.out.println(chrome.getHost());
 
 //		String hostIpAddress = "192.168.1.155";
 		// https://stackoverflow.com/questions/9481865/getting-the-ip-address-of-the-current-machine-using-java
