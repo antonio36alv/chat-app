@@ -38,8 +38,8 @@ jobs:
     steps:
     # checkout what was commited, then create the pr
     # accept the pr and merge to master
-    - name: create pr, accept and merge to master
     - uses: actions/checkout@v2
+    - name: create pr, accept and merge to master
     # if we were to make any changes it would be here
     # https://github.com/marketplace/actions/create-pull-request
     - uses: peter-evans/create-pull-request@v3
