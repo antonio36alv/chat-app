@@ -32,12 +32,12 @@ jobs:
       run: mvn -B package --file pom.xml -X
 # will need build job -> build job simultaneously take care of testing
 # find a way to push to master
-  integration:
-    needs: build
-    runs-on: ubuntu-latest
-    steps:
-    - name: push code to master
-      run: pwd
+  # integration:
+  #   needs: build
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #   - name: push code to master
+  #     run: pwd
       # uses: ad-m/github-push-action@master
       # with:
         # github_token: ${{ secrets.GITHUB_TOKEN }}
