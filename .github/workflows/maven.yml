@@ -53,9 +53,9 @@ jobs:
         echo "actor: - ${{ github.actor }}"
     - name: check outputs
       run: echo "Pull Request URL - ${{ steps.cpr.outputs.pull-request-url }}"
-    - uses: pascalgn/automerge-action@v0.12.0
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    # - uses: pascalgn/automerge-action@v0.12.0
+    #   env:
+    #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     # if we were to make any changes it would be here
     # https://github.com/marketplace/actions/create-pull-request
     # following works on prs with the auto merge label
