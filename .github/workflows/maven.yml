@@ -40,9 +40,12 @@ jobs:
     steps:
     - uses: actions/checkout@v2
     - name: create pr, accept and merge to master
+      id: cpr
       uses: peter-evans/create-pull-request@v3
       with:
         labels: automerge
+    - name: check outputs
+      run: echo "Pull Request URL - ${{ steps.cpr.outputs.pull-request-url }}"
     - uses: pascalgn/automerge-action@v0.12.0
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
