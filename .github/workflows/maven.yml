@@ -43,7 +43,10 @@ jobs:
       id: cpr
       uses: peter-evans/create-pull-request@v3
       with:
-        labels: automerge
+        labels: |
+          automerge
+    - name: branch name
+      run:  echo "running on branch - ${{ github.ref }}"
     - name: check outputs
       run: echo "Pull Request URL - ${{ steps.cpr.outputs.pull-request-url }}"
     - uses: pascalgn/automerge-action@v0.12.0
