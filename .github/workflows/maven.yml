@@ -39,6 +39,7 @@ jobs:
     # accept the pr and merge to master
     steps:
     - uses: actions/checkout@v2
+    - run: echo "bs" > bs.txt
     - name: create pr, accept and merge to master
       id: cpr
       uses: peter-evans/create-pull-request@v3
@@ -49,6 +50,7 @@ jobs:
     - name: check outputs
       run: |
         echo "Pull Request Number - ${{ steps.cpr.outputs.pull-request-number }}"
+        echo "PR URL - ${{ steps.cpr.outputs.pull-request-url }}"
         echo "Pull Request URL - ${{ steps.cpr.outputs.pull-request-url }}"
     - name: branch name
       run: |
