@@ -57,11 +57,13 @@ jobs:
         echo ${{ steps.extract_branch.outputs.branch }}
         echo ${{ github.repository }}
     - name: create pull request via github api
-      run: |
-        curl -u ${{ github.actor }}:${{ secrets.GITHUB_TOKEN }} -X POST \
+      id: create_pr_job
+      run: "##[set-output name=pr_json;]curl -u ${{ github.actor }}:${{ secrets.GITHUB_TOKEN }} -X POST \
         -H "Accept: application/vnd.github.v3+json" \
         https://api.github.com/repos/antonio36alv/chat-app/pulls \
-        -d '{"title":"working title", "head":"${{ steps.extract_branch.outputs.branch }}", "base":"master", "labels":"automerge"}'
+        -d '{"title":"working title", "head":"${{ steps.extract_branch.outputs.branch }}", "base":"master", "labels":"automerge"}'"
+    - name: check pr job output
+      run: echo ${{ steps.create_pr_job.outputs.pr_json.number }}
 
 
       # notes for modification after this works:
