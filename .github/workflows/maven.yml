@@ -49,7 +49,7 @@ jobs:
       uses: peter-evans/create-pull-request@v3
       with:
         # token: ${{ secrets.GITHUB_TOKEN }}
-        branch: ${{ steps.extrach_branch.outputs.branch }}
+        branch: ${{ steps.extract_branch.outputs.branch }}
         labels: automerge
     - name: check outputs
       run: |
