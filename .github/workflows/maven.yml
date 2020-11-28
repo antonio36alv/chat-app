@@ -42,18 +42,20 @@ jobs:
     - name: create pr, accept and merge to master
       id: cpr
       uses: peter-evans/create-pull-request@v3
-      with:
-        token: ${{ secrets.GITHUB_TOKEN }}
-        labels: |
-          automerge
+      # with:
+        # token: ${{ secrets.GITHUB_TOKEN }}
+        # labels: |
+          # automerge
+    - name: check outputs
+      run: |
+        echo "Pull Request Number - ${{ steps.cpr.outputs.pull-request-number }}"
+        echo "Pull Request URL - ${{ steps.cpr.outputs.pull-request-url }}"
     - name: branch name
       run: |
         echo "running on branch - ${{ github.ref }}"
         echo "different thing: - ${{ github.base_ref }}"
         echo "different thing: - ${{ github.head_ref }}"
         echo "actor: - ${{ github.actor }}"
-    - name: check outputs
-      run: echo "Pull Request URL - ${{ steps.cpr.outputs.pull-request-url }}"
     # - uses: pascalgn/automerge-action@v0.12.0
     #   env:
     #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
