@@ -40,9 +40,9 @@ jobs:
     steps:
     - uses: actions/checkout@v2
     - run: echo "bs" > bs.txt
-    - name: extrach branch name
+    - name: extract branch name
       shell: bash
-      run: echo "##[set-output name=branch;]$(echo ${GITHUB_REF#refs/heads/})"
+      run: echo "##[set-output name=branch;]${GITHUB_REF#refs/heads/}"
       id: extract_branch
     - name: create pr, accept and merge to master
       id: cpr
