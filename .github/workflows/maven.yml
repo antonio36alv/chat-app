@@ -38,8 +38,6 @@ jobs:
 # will need build job -> build job simultaneously take care of testing
 # find a way to push to master
   integration:
-    needs: build
-    runs-on: ubuntu-latest
     # checkout what was commited, then create the pr
     # accept the pr and merge to master
     # THOUGHT PROCESS:
@@ -47,11 +45,13 @@ jobs:
     # checkout into branch using branch name
     # checking the branch name just incase
     # initialize pr
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
     - name: extract branch name
       shell: bash
       run: echo "##[set-output name=branch;]${GITHUB_REF#refs/heads/}"
       id: extract_branch
-    # steps:
     # - uses: actions/checkout@v2
     #   with:
     #     ref: ${{ steps.extract_branch.outputs.branch }}
