@@ -59,8 +59,9 @@ jobs:
     # # - run: echo "bs" > bs.txt
     # - name: check output for extract branch name
     #   run: echo ${{ steps.extract_branch.outputs.branch }}
-    - name: initialize pr
+    - name: Initialize Pull Request
       uses: gha-utilities/init-pull-request@v0.1.9
+
       with:
         verbose: true
         pull_request_token: ${{ secrets.GITHUB_TOKEN }}
