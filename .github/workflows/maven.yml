@@ -45,7 +45,7 @@ jobs:
       uses: peter-evans/create-pull-request@v3
       with:
         # token: ${{ secrets.GITHUB_TOKEN }}
-        branch: ${GITHUB_REF##*/}
+        branch: ${{ GITHUB_REF##*/ }}
         labels: automerge
     - name: check outputs
       run: |
