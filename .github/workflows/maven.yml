@@ -43,10 +43,10 @@ jobs:
     - name: create pr, accept and merge to master
       id: cpr
       uses: peter-evans/create-pull-request@v3
-      # with:
+      with:
         # token: ${{ secrets.GITHUB_TOKEN }}
-        # labels: |
-          # automerge
+        branch: ${GITHUB_REF##*/}
+        labels: automerge
     - name: check outputs
       run: |
         echo "Pull Request Number - ${{ steps.cpr.outputs.pull-request-number }}"
