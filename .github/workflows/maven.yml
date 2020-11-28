@@ -56,13 +56,18 @@ jobs:
       run: echo ${{ steps.extract_branch.outputs.branch }}
     - name: create pull request via github api
       run: |
-        curl -u ${{ github.actor }}:${{ secrets.GITHUB_TOKEN }} -X POST \
+        curl -u ${{ github.actor }}:${{ secrets.PAT }} -X POST \
         -H "Accept: application/vnd.github.v3+json" \
         https://api.github.com/repos/antonio36alv/chat-app/pulls \
         -d '{"head":"${{ steps.extract_branch.outputs.branch }}", "base":"master"'
       # notes for modification after this works:
       # get repo endpoint programmatically (i.e. instead of /repos/antonio36alv/chat-app/pulls /repos/githubactor/:repo/pulls)
       # try to add a label via json field
+
+      # change branches to anything but master
+      # will add protections to master
+      # this will prevent pushes to master
+      # and will ensure code gets built/tested before merging into master
 
     # - uses: pascalgn/automerge-action@v0.12.0
     #   env:
