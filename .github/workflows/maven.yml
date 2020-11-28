@@ -55,6 +55,7 @@ jobs:
     - name: branch name
       run: |
         echo "running on branch - ${{ github.ref }}"
+        echo "running on branch - ${GITHUB_REF##*/}"
         echo "different thing: - ${{ github.base_ref }}"
         echo "different thing: - ${{ github.head_ref }}"
         echo "actor: - ${{ github.actor }}"
