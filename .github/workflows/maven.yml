@@ -59,18 +59,18 @@ jobs:
     # # - run: echo "bs" > bs.txt
     # - name: check output for extract branch name
     #   run: echo ${{ steps.extract_branch.outputs.branch }}
-    - name: Initialize Pull Request
-      uses: gha-utilities/init-pull-request@v0.1.7
+    # - name: Initialize Pull Request
+    #   uses: gha-utilities/init-pull-request@v0.1.7
 
-      with:
-        verbose: true
-        pull_request_token: ${{ secrets.GITHUB_TOKEN }}
-        head: ${{ steps.extract_branch.outputs.branch }}
-        base: master
-        title: "Take me away"
-        body: >
-          Perhaps a multi-line descritpion
-          about latest features and such
+    #   with:
+    #     verbose: true
+    #     pull_request_token: ${{ secrets.GITHUB_TOKEN }}
+    #     head: ${{ steps.extract_branch.outputs.branch }}
+    #     base: master
+    #     title: "Take me away"
+    #     body: >
+    #       Perhaps a multi-line descritpion
+    #       about latest features and such
 
 
     # - name: create pr, accept and merge to master
