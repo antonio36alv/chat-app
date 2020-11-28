@@ -52,46 +52,18 @@ jobs:
       shell: bash
       run: echo "##[set-output name=branch;]${GITHUB_REF#refs/heads/}"
       id: extract_branch
-    # - uses: actions/checkout@v2
-    #   with:
-    #     ref: ${{ steps.extract_branch.outputs.branch }}
-    #     fetch-depth: 0
-    # # - run: echo "bs" > bs.txt
-    # - name: check output for extract branch name
-    #   run: echo ${{ steps.extract_branch.outputs.branch }}
-    # - name: Initialize Pull Request
-    #   uses: gha-utilities/init-pull-request@v0.1.7
+    - name: check output for extract branch name
+      run: echo ${{ steps.extract_branch.outputs.branch }}
+    - name: create pull request via github api
+      run: |
+        curl -u ${{ github.actor }}:${{ secrets.GITHUB_TOKEN }} -X POST \
+        -H "Accept: application/vnd.github.v3+json" \
+        https://api.github.com/repos/antonio36alv/chat-app/pulls \
+        -d '{"head":"${{ steps.extract_branch.outputs.branch }}", "base":"master"'
+      # notes for modification after this works:
+      # get repo endpoint programmatically (i.e. instead of /repos/antonio36alv/chat-app/pulls /repos/githubactor/:repo/pulls)
+      # try to add a label via json field
 
-    #   with:
-    #     verbose: true
-    #     pull_request_token: ${{ secrets.GITHUB_TOKEN }}
-    #     head: ${{ steps.extract_branch.outputs.branch }}
-    #     base: master
-    #     title: "Take me away"
-    #     body: >
-    #       Perhaps a multi-line descritpion
-    #       about latest features and such
-
-
-    # - name: create pr, accept and merge to master
-    #   id: cpr
-    #   uses: peter-evans/create-pull-request@v3
-    #   with:
-    #     # token: ${{ secrets.GITHUB_TOKEN }}
-    #     branch: ${{ steps.extract_branch.outputs.branch }}
-    #     labels: automerge
-    # - name: check outputs
-    #   run: |
-    #     echo "Pull Request Number - ${{ steps.cpr.outputs.pull-request-number }}"
-    #     echo "PR URL - ${{ steps.cpr.outputs.pull-request-url }}"
-    #     echo "Pull Request URL - ${{ steps.cpr.outputs.pull-request-url }}"
-    # - name: branch name
-    #   run: |
-    #     echo "running on branch - ${{ github.ref }}"
-    #     echo "running on branch - ${GITHUB_REF##*/}"
-    #     echo "different thing: - ${{ github.base_ref }}"
-    #     echo "different thing: - ${{ github.head_ref }}"
-    #     echo "actor: - ${{ github.actor }}"
     # - uses: pascalgn/automerge-action@v0.12.0
     #   env:
     #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
