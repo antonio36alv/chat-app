@@ -2,10 +2,15 @@
 # For more information see: https://help.github.com/actions/language-and-framework-guides/building-and-testing-java-with-maven
 
 name: Java CI with Maven
+# whenver there is a push to a branch that is not master
+# there needs to be a way to build & test the code - no problem -> build job takes care of this
+# after we are succesful execute the next job
+# the next job needs to merge the changes into master... but how do we merge into master?
+# typically the manual way would be to compare changes between master and X branch via a pull request
 
 on:
   push:
-    branches: [ master ]
+    branches: [ master, trial ]
   pull_request:
     branches: [ master ]
 
@@ -32,15 +37,46 @@ jobs:
       run: mvn -B package --file pom.xml -X
 # will need build job -> build job simultaneously take care of testing
 # find a way to push to master
-  # integration:
-  #   needs: build
-  #   runs-on: ubuntu-latest
-  #   steps:
-  #   - name: push code to master
+  integration:
+    # checkout what was commited, then create the pr
+    # accept the pr and merge to master
+    # THOUGHT PROCESS:
+    # get branch name
+    # checkout into branch using branch name
+    # checking the branch name just incase
+    # initialize pr
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+    - name: extract branch name
+      shell: bash
+      run: echo "##[set-output name=branch;]${GITHUB_REF#refs/heads/}"
+      id: extract_branch
+    - name: check output for extract branch name
+      run: echo ${{ steps.extract_branch.outputs.branch }}
+    - name: create pull request via github api
+      run: |
+        curl -u ${{ github.actor }}:${{ secrets.PAT }} -X POST \
+        -H "Accept: application/vnd.github.v3+json" \
+        https://api.github.com/repos/antonio36alv/chat-app/pulls \
+        -d '{"title":"working title", "head":"${{ steps.extract_branch.outputs.branch }}", "base":"master", "labels":"automerge"}'
+      # notes for modification after this works:
+      # get repo endpoint programmatically (i.e. instead of /repos/antonio36alv/chat-app/pulls /repos/githubactor/:repo/pulls)
+      # try to add a label via json field
+
+      # change branches to anything but master
+      # will add protections to master
+      # this will prevent pushes to master
+      # and will ensure code gets built/tested before merging into master
+
+    # - uses: pascalgn/automerge-action@v0.12.0
+    #   env:
+    #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    # if we were to make any changes it would be here
+    # https://github.com/marketplace/actions/create-pull-request
+    # following works on prs with the auto merge label
+    # https://github.com/marketplace/actions/merge-pull-requests  
   #     run: pwd
-      # uses: ad-m/github-push-action@master
       # with:
         # github_token: ${{ secrets.GITHUB_TOKEN }}
         # branch: ${{ github.ref }}
-    
-    # find out a way to push to master
