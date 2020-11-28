@@ -2,6 +2,11 @@
 # For more information see: https://help.github.com/actions/language-and-framework-guides/building-and-testing-java-with-maven
 
 name: Java CI with Maven
+# whenver there is a push to a branch that is not master
+# there needs to be a way to build & test the code - no problem -> build job takes care of this
+# after we are succesful execute the next job
+# the next job needs to merge the changes into master... but how do we merge into master?
+# 
 
 on:
   push:
