@@ -40,12 +40,16 @@ jobs:
     steps:
     - uses: actions/checkout@v2
     - run: echo "bs" > bs.txt
+    - name: extrach branch name
+      shell: bash
+      run: echo "##[set-output name=branch;]$(echo ${GITHUB_REF#refs/heads/})"
+      id: extract_branch
     - name: create pr, accept and merge to master
       id: cpr
       uses: peter-evans/create-pull-request@v3
       with:
         # token: ${{ secrets.GITHUB_TOKEN }}
-        branch: ${{ github.base_ref }}
+        branch: eng:${{ steps.extrach_branch.outputs.branch }}
         labels: automerge
     - name: check outputs
       run: |
