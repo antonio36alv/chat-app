@@ -2,114 +2,65 @@
 # For more information see: https://help.github.com/actions/language-and-framework-guides/building-and-testing-java-with-maven
 
 name: Java CI with Maven
-# whenver there is a push to a branch that is not master
-# there needs to be a way to build & test the code - no problem -> build job takes care of this
-# after we are succesful execute the next job
-# the next job needs to merge the changes into master... but how do we merge into master?
-# typically the manual way would be to compare changes between master and X branch via a pull request
 
 on:
   push:
-    branches: [ master, trial ]
+    branches: 
+      - '*'
+      - '!master'
 
 jobs:
+  # build simultaneously builds and tests code
   build:
-
     runs-on: ubuntu-latest
-
     steps:
     - uses: actions/checkout@v2
     - name: Set up JDK 11
       uses: actions/setup-java@v1
       with:
         java-version: 11
-#    - name: Set up selenium firefox
-#      container:
-#        image: selenium/standalone-firefox:latest
-#    - name: Install google chrome
-#      run: |
-#        whatis flatpak
-#        chmod +x ./scripts/InstallChrome.sh
-#         ./scripts/InstallChrome.sh
     - name: Build with Maven
       run: mvn -B package --file pom.xml -X
-# will need build job -> build job simultaneously take care of testing
-# find a way to push to master
+  # integration will run after a successful build + test job
+  # will create a pull request with the newly pushed code
+  # then merge it into master
   integration:
-    # checkout what was commited, then create the pr
-    # accept the pr and merge to master
-    # THOUGHT PROCESS:
-    # get branch name
-    # checkout into branch using branch name
-    # checking the branch name just incase
-    # initialize pr
     needs: build
     runs-on: ubuntu-latest
+    # parse github ref in order to get branch name
+    # docs for reference
+    # setting outputs
+    # https://docs.github.com/en/free-pro-team@latest/actions/reference/workflow-commands-for-github-actions#setting-an-output-parameter
     steps:
     - name: extract branch name
       shell: bash
-      run: echo "##[set-output name=branch;]${GITHUB_REF#refs/heads/}"
+      run: echo "::set-output name=branch::${GITHUB_REF#refs/heads/}"
       id: extract_branch
     - name: check output for extract branch name
       run: |
         echo ${{ steps.extract_branch.outputs.branch }}
         echo ${{ github.repository }}
+    # creates pull request, requires personal access token
+    # to be stored within secrets
+    # docs for reference
+    # https://docs.github.com/en/free-pro-team@latest/github/collaborating-with-issues-and-pull-requests/creating-a-pull-request
     - name: create pull request via github api
       id: create_pr_step
       run: |
         echo "::set-output name=response::$(curl -u ${{ github.actor }}:${{ secrets.PAT }} -X POST \
         -H "Accept: application/vnd.github.v3+json" \
-        https://api.github.com/repos/antonio36alv/chat-app/pulls \
-        -d '{"title":"working title", "head":"${{ steps.extract_branch.outputs.branch }}", "base":"master"}' | json_pp -json_opt relaxed )"
-    #   uses: indiesdev/curl@v1
-    #   id: create_pr_step
-    #   with:
-    #     url: https://api.github.com/repos/${{ github.repository }}/pulls
-    #     method: POST
-    #     headers: '{"Authorization": "application/vnd.github.v3+json"}'
-    #     basic-auth: ${{ github.actor }}:${{ secrets.PAT }}
-    #     accept: 201
-    #     body: '{"title":"working title","head":"${{ steps.extract_branch.outputs.branch}}","base":"master"}'
-      
-    - name: use response
+        https://api.github.com/repos/${{ github.repository }}/pulls \
+        -d '{"title":"${{ github.event.head_commit.message }}", "head":"${{ steps.extract_branch.outputs.branch }}", "base":"master"}' | json_pp -json_opt relaxed )"
+    # where I found out about fromJson
+    # https://stackoverflow.com/questions/61919141/read-json-file-in-github-actionshttps://stackoverflow.com/questions/61919141/read-json-file-in-github-actions
+    # found this from github after the fact
+    # https://github.blog/changelog/2020-04-15-github-actions-new-workflow-features/
+    - name: merge pull request via github api
+      run: |
+        curl -u ${{ github.actor }}:${{ secrets.PAT }} -X PUT \
+        -H "Accept: application/vnd.github.v3+json" \
+        https://api.github.com/repos/${{ github.repository }}/pulls/${{ fromJson(steps.create_pr_step.outputs.response).number }}/merge
+    - name: check response output
       run: |
         echo ${{ fromJson(steps.create_pr_step.outputs.response).number }}
         echo ${{ github.event.head_commit.message }}
-# on:
-  # pull_request:
-    # branches: [ master ]
-# jobs:
-  # jawn:
-    # steps:
-    # - name: stop the count
-      # run: echo "fuck this"
-    # "##[set-output name=pr_json;]curl -u ${{ github.actor }}:${{ secrets.GITHUB_TOKEN }} -X POST 
-        
-
-    # - name: check pr job output
-      # run: echo ${{ steps.create_pr_job.outputs.pr_json.number }}
-
-
-      # notes for modification after this works:
-      # get repo endpoint programmatically (i.e. instead of /repos/antonio36alv/chat-app/pulls /repos/githubactor/:repo/pulls)
-        # curl -u ${{ github.actor }}:${{ secrets.PAT }} -X PUT \
-        # -H "Accept: application/vnd.github.v3+json"
-        # https://api.github.com/repos/antonio36alv/chat-app/pulls/
-      # try to add a label via json field
-
-      # change branches to anything but master
-      # will add protections to master
-      # this will prevent pushes to master
-      # and will ensure code gets built/tested before merging into master
-
-    # - uses: pascalgn/automerge-action@v0.12.0
-    #   env:
-    #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-    # if we were to make any changes it would be here
-    # https://github.com/marketplace/actions/create-pull-request
-    # following works on prs with the auto merge label
-    # https://github.com/marketplace/actions/merge-pull-requests  
-  #     run: pwd
-      # with:
-        # github_token: ${{ secrets.GITHUB_TOKEN }}
-        # branch: ${{ github.ref }}
