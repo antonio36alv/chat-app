@@ -65,7 +65,7 @@ jobs:
         headers: '{"Authorization": "application/vnd.github.v3+json"}'
         basic-auth: ${{ github.actor }}:${{ secrets.PAT }}
         accept: 201
-        body: '{"title":"working title","head":${{ steps.extract_branch.outputs.branch}},"base":"master"}'
+        body: '{"title":"working title","head":"${{ steps.extract_branch.outputs.branch}}","base":"master"}'
       
     - name: use response
       run: |
