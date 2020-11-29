@@ -60,7 +60,7 @@ jobs:
         echo "::set-output name=response::$(curl -u ${{ github.actor }}:${{ secrets.PAT }} -X POST \
         -H "Accept: application/vnd.github.v3+json" \
         https://api.github.com/repos/antonio36alv/chat-app/pulls \
-        -d '{"title":"working title", "head":"${{ steps.extract_branch.outputs.branch }}", "base":"master"}')"
+        -d '{"title":"working title", "head":"${{ steps.extract_branch.outputs.branch }}", "base":"master"}' | json_pp -json_opt relaxed )"
     #   uses: indiesdev/curl@v1
     #   id: create_pr_step
     #   with:
