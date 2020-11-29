@@ -74,7 +74,7 @@ jobs:
     - name: use response
       run: |
         echo ${{ steps.create_pr_step.outputs.response }}
-        echo ${{ steps.create_pr_step.outputs.response.number }}
+        echo ${{ fromJson(steps.create_pr_step.outputs.response).number }}
 # on:
   # pull_request:
     # branches: [ master ]
