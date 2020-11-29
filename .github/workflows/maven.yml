@@ -73,8 +73,8 @@ jobs:
       
     - name: use response
       run: |
-        echo ${{ steps.create_pr_step.outputs.response }}
         echo ${{ fromJson(steps.create_pr_step.outputs.response).number }}
+        echo ${{ github.event.head_commit.message }}
 # on:
   # pull_request:
     # branches: [ master ]
