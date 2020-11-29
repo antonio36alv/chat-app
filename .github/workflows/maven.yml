@@ -75,7 +75,7 @@ jobs:
       run: |
         echo ${{ steps.create_pr_step.outputs.response }}
         echo ${{ steps.create_pr_step.outputs.response.number }}
-on:
+# on:
   pull_request:
     branches: [ master ]
 jobs:
