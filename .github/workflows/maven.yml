@@ -57,7 +57,7 @@ jobs:
         echo ${{ steps.extract_branch.outputs.branch }}
         echo ${{ github.repository }}
     - name: create pull request via github api
-      uses: agoda-com/curl@v1
+      uses: indiesdev/curl@v1
       id: create_pr_step
       with:
         url: https://api.github.com/repos/${{ github.repository }}/pulls
