@@ -58,10 +58,11 @@ jobs:
         echo ${{ github.repository }}
     - name: create pull request via github api
       id: create_pr_job
-      run: echo "::set-output name=response::$(curl -u ${{ github.actor }}:${{ secrets.GITHUB_TOKEN }} -X POST \
+      run: |
+        echo "::set-output name=response::$(curl -u ${{ github.actor }}:${{ secrets.GITHUB_TOKEN }} -X POST \
         -H "Accept: application/vnd.github.v3+json" \
         https://api.github.com/repos/antonio36alv/chat-app/pulls \
-        -d '{"title":"working title", "head":"${{ steps.extract_branch.outputs.branch }}", "base":"master", "labels":"automerge"}')"
+        -d '{"title":"working title", "head":"${{ steps.extract_branch.outputs.branch }}", "base":"master"}')"
     #   uses: indiesdev/curl@v1
     #   id: create_pr_step
     #   with:
